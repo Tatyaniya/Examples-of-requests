@@ -1,0 +1,70 @@
+1.  Главная страница
+
+    Получение всех статей на главной странице. К каждой статье нужно прицепить
+    данные о пользователе, который ещё написал. Сортируем так, чтобы самые свежие
+    были вверху. Не более 20 статей.    
+    SELECT * FROM `articles` JOIN users USING (id_user) ORDER BY dt_art DESC LIMIT 20
+
+    Все поля статьи и урл категории (с переименованием в cat_url)
+    SELECT articles.*, cats.url as cat_url FROM articles JOIN cats USING (id_user)
+
+    Получение списка всех категорий сайта с сортировкой по алфавиту
+    SELECT * FROM cats ORDER BY title ASC
+
+   
+
+2.  Страница статьи вида article.php?id=[int]
+
+    Получение статьи по id с добавлением данных о пользователе
+    SELECT * FROM `articles` JOIN users USING (id_user) WHERE id_art = id
+
+    SELECT articles.*, users.login, users.name FROM articles 
+    JOIN users using(id_user)
+    WHERE articles.status = 1 AND id_article=1;
+    // -> $id_cat
+
+    Получение категории статьи.
+    SELECT * FROM cats WHERE id_cat=[id_cat]
+
+    Получение всех тегов статьи.
+    SELECT * FROM articles_tags JOIN tags using(id_tag) WHERE id_article=[id_article]
+    Идем в таблицу articles_tags, где id_article=[id_article] и джойнимся с таблицей тегов
+
+
+
+3.  Страница категории вида cat.php?url=[str]
+
+    Получение данных о категории по url
+    SELECT * FROM `cats` WHERE cat_url = 'url'
+
+    Получение всех статей категории.
+    SELECT * FROM `articles` WHERE id_cat = id AND status=1
+
+
+
+4.  Страница тега вида tag.php?url=[str]
+
+    Получение данных о теге по url.
+    SELECT * FROM `tags` WHERE tag_url = 'url'
+
+    Получение всех статей данного тега
+    SELECT * FROM `articles_tags` JOIN articles USING (id_article) WHERE id_tag = id AND status=1
+
+    - hard mode by url
+    SELECT articles.* FROM tags 
+    JOIN articles_tags using(id_tag)
+    JOIN articles using(id_article)
+    WHERE tag_url = 'url' AND status=1
+
+
+
+5.  Страница пользователя вида user.php?nic=[str]
+
+    Получение данных о пользователе по nic
+    SELECT * FROM `users` WHERE login = 'login'
+
+    Получение всех статей данного пользователя.
+    SELECT * FROM `articles` LEFT JOIN users USING (id_user) WHERE login = 'str'
+
+    SELECT * FROM articles WHERE id_user=id AND status=1
+
